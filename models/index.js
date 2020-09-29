@@ -14,6 +14,13 @@ Page.init(
       type: Sequelize.STRING,
       allowNull: false,
     },
+    route: {
+      type: Sequelize.VIRTUAL,
+      allowNull: false,
+      get() {
+        return this.getDataValue(`/wiki/${this.urlTitle}`);
+      },
+    },
     content: {
       type: Sequelize.TEXT,
       allowNull: false,
@@ -51,5 +58,5 @@ User.init(
 module.exports = {
   Page: Page,
   User: User,
-  db,
+  db: db,
 };
