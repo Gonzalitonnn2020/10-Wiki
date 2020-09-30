@@ -12,11 +12,9 @@ Page.init(
     },
     urlTitle: {
       type: Sequelize.STRING,
-      allowNull: false,
     },
     route: {
       type: Sequelize.VIRTUAL,
-      allowNull: false,
       get() {
         return this.getDataValue(`/wiki/${this.urlTitle}`);
       },
@@ -53,6 +51,17 @@ User.init(
   },
   { sequelize: db, modelName: "user" }
 );
+
+Page.addHook('beforeValidate', function generateUrlTitle (title,page) {
+  if(title) {
+    // Remueve todos los caracteres no-alfanuméricos 
+    // y hace a los espacios guiones bajos. 
+    return page.urlTitle = title.replace(/\s+/g, '_').replace(/\W/g, '');
+  } else {
+    // Generá de forma aleatoria un string de 5 caracteres
+    return Math.random().toString(36).substring(2, 7);
+  }
+})
 
 //--
 module.exports = {
